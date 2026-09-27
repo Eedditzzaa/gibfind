@@ -1,0 +1,7 @@
+{
+  "categories": ["Development", "Research"],
+  "minPayment": 5,
+  "skills": ["Python", "AI"],
+  "maxDeadlineDays": 7,
+  "keywords": ["automation"]
+}

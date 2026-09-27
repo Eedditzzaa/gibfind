@@ -1,0 +1,28 @@
+{
+  "name": "gibfind",
+  "version": "1.0.0",
+  "description": "CLI tool for discovering and matching Gibwork bounties",
+  "main": "index.js",
+  "bin": {
+    "gibfind": "./bin/gibfind.js"
+  },
+  "scripts": {
+    "search": "node search.js",
+    "watch": "node watch.js"
+  },
+  "keywords": [
+    "gibwork",
+    "bounty",
+    "cli",
+    "matcher"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@gibwork/sdk": "^0.2.0",
+    "bs58": "^6.0.0",
+    "dotenv": "^18.0.4",
+    "nodemailer": "^10.0.10"
+  }
+}

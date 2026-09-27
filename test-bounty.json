@@ -1,0 +1,8 @@
+{
+  "id": "test-bounty-001",
+  "title": "Build Python AI automation tool",
+  "content": "Create an automation workflow using Python and AI.",
+  "tags": ["Development", "AI"],
+  "minSubmissionAmount": "25",
+  "deadline": null
+}
