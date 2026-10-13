@@ -1,111 +1,115 @@
 # Gibfind — Gibwork Bounty Matcher
 
-Gibfind is a command-line tool that helps users discover Gibwork bounties that match their preferences.
+**Gibfind helps you find Gibwork bounties that match your interests.**
 
-Instead of manually checking every available bounty, users can filter bounties by category, minimum payment, skills, deadline, and keywords. Gibfind fetches available bounties using the Gibwork SDK, applies custom matching rules, and can monitor for new matches.
+Instead of checking every bounty manually, you can set your preferences and let Gibfind find relevant opportunities for you.
 
-When a new matching bounty is detected, Gibfind can send an email notification.
+Gibfind uses the **Gibwork SDK** to fetch bounties, filters them using your preferences, and can send you an email when a new matching bounty is found.
 
-## Why Gibfind?
+## 1. What can Gibfind do?
 
-Gibwork can have multiple bounties available at different times. Users may only be interested in particular types of work, payment ranges, skills, or keywords.
+- Find bounties by category, such as Development or Research.
+- Filter by minimum payment.
+- Match skills such as Python or AI.
+- Filter by deadline.
+- Search for specific keywords.
+- Choose how many filter categories must match.
+- Send email notifications for new matching bounties.
+- Avoid sending duplicate notifications for the same bounty.
 
-Gibfind reduces manual searching by automatically filtering available bounties and notifying users when relevant opportunities appear.
+Gibfind runs in your terminal. It does not need a website or dashboard.
 
-## Core Workflow
+## 2. How does it work?
 
 ```text
 Gibwork
    |
    v
-Gibwork SDK
+Fetch Bounties Using SDK
    |
    v
-Fetch Available Bounties
+Check Your Preferences
    |
    v
-Preference Matcher
+Find Matching Bounties
    |
-   +---- No Match ----> Ignore
+   v
+Check for Duplicates
    |
-   +---- Match
-          |
-          v
-     Duplicate Check
-          |
-          v
-     Email Notification
-          |
-          v
-        Gmail
+   v
+Send Email Notification
 ```
 
-## Features
+## 3. What do you need?
 
-- Fetch available bounties using the Gibwork SDK.
-- Filter bounties by category, minimum payment, skills, deadline, and keywords.
-- Configure how many selected filter categories must match.
-- Search for matching bounties from the terminal.
-- Monitor bounties periodically in watch mode.
-- Send email notifications for new matching bounties.
-- Track previously notified bounty IDs to prevent duplicate notifications.
-- Test notification behavior using a sample bounty.
+Before starting, install these tools:
 
-## Requirements
+1. **Node.js and npm** — to run the project. Download them from https://nodejs.org/
+2. **Git** — to download the project. Download it from https://git-scm.com/
+3. **Gibwork credentials** — needed to fetch bounties using the SDK.
+4. **Gmail account** — optional, but required if you want email notifications.
 
-Before running Gibfind, install or prepare:
+If you are new to coding, complete the following steps in order.
 
-- Node.js and npm.
-- A Gibwork account and the credentials required to access available bounties through the SDK.
-- A Gmail account if you want email notifications.
-- A Gmail App Password for SMTP authentication.
+## 4. Download and install Gibfind
 
-## Installation
+Open Command Prompt or a terminal.
 
-Clone the repository and enter the project directory:
+### Step 1: Download the project
+
+Run:
 
 ```bash
 git clone https://github.com/Eedditzzaa/gibfind.git
+```
+
+Move into the project folder:
+
+```bash
 cd gibfind
 ```
 
-Install dependencies:
+### Step 2: Install dependencies
+
+Run:
 
 ```bash
 npm install
 ```
 
-Register the local CLI command:
+This installs the libraries Gibfind needs to work.
+
+### Step 3: Enable the Gibfind command
+
+Run:
 
 ```bash
 npm link
 ```
 
-Check that the command is available:
+This makes the `gibfind` command available in your local development environment.
 
-```bash
-gibfind config
-```
+If you are using Windows and a command is not recognized, close and reopen your terminal and try again.
 
-## Configuration
-
-### 1. Gibwork credentials
+## 5. Set up your Gibwork credentials
 
 Gibfind uses the Gibwork SDK to retrieve available bounties.
 
-Place your valid Gibwork keypair JSON file in the project directory using the filename:
+Place your valid Gibwork keypair JSON file in the project folder and name it:
 
 ```text
 gibwork-keypair.json
 ```
 
-Use your own valid credentials and follow Gibwork's credential setup instructions. Never share your private key or commit the keypair file to GitHub.
+The file must contain a valid keypair in the format expected by the SDK.
 
-### 2. Bounty preferences
+**Important:** Never share your private key or upload `gibwork-keypair.json` to GitHub. Use your own credentials and keep this file private.
 
-Edit `preferences.json` to configure your matching rules.
+## 6. Choose your bounty preferences
 
-Example:
+Open `preferences.json` in a text editor.
+
+You will see settings similar to these:
 
 ```json
 {
@@ -118,24 +122,42 @@ Example:
 }
 ```
 
-Configuration fields:
+You can change these values to suit your interests.
 
-| Field | Description |
+| Setting | What it means |
 |---|---|
-| `categories` | Categories to look for |
-| `minPayment` | Minimum acceptable submission payment |
-| `skills` | Skills or related terms to match |
-| `maxDeadlineDays` | Maximum number of days until the deadline |
-| `keywords` | Keywords to search for in bounty information |
-| `minimumMatches` | Minimum number of selected filter categories that must match |
+| `categories` | The bounty categories you want |
+| `minPayment` | The minimum payment you accept |
+| `skills` | Skills or terms you want to find |
+| `maxDeadlineDays` | The maximum number of days until a deadline |
+| `keywords` | Words you want to search for |
+| `minimumMatches` | The minimum number of filter categories that must match |
 
-With `minimumMatches` set to `1`, a bounty can match when at least one configured filter category matches. Increase it to `2` or more to require multiple filter categories to match.
+### What does `minimumMatches` mean?
 
-Set unused list filters to `[]` and unused numeric filters to `null` if you do not want to apply them. Set `maxDeadlineDays` to `null` to disable the deadline filter.
+For example, if you set:
 
-## Email Notification Setup
+```json
+"minimumMatches": 1
+```
 
-Create a `.env` file in the project directory:
+A bounty can match when at least one of your configured filter categories matches.
+
+If you set it to:
+
+```json
+"minimumMatches": 2
+```
+
+At least two filter categories must match.
+
+You can edit these settings whenever your interests change. Save the file after editing it.
+
+## 7. Set up email notifications (optional)
+
+If you want to receive email alerts, create a file named `.env` in the project folder.
+
+Add these lines:
 
 ```env
 GMAIL_USER=your-email@gmail.com
@@ -143,29 +165,35 @@ GMAIL_APP_PASSWORD=your-gmail-app-password
 NOTIFY_TO=recipient-email@gmail.com
 ```
 
-Replace the example values with your own settings.
+Replace the example values with your own email settings.
 
-Use a Gmail App Password rather than your normal Gmail password. Keep `.env` private and never upload it to GitHub.
+- `GMAIL_USER` is the Gmail account used to send notifications.
+- `GMAIL_APP_PASSWORD` is the Gmail App Password used for authentication.
+- `NOTIFY_TO` is the email address that receives notifications.
 
-Email notifications require valid Gmail SMTP credentials. You can still use the search command without configuring email.
+Use a Gmail App Password rather than your regular Gmail password. Gmail App Passwords require the appropriate Google Account security setup.
 
-## Usage
+**Keep `.env` private. Never upload your email credentials to GitHub.**
 
-### Show configuration
+## 8. Run Gibfind
+
+Once the setup is complete, open your terminal inside the project folder.
+
+### Command 1: View your preferences
 
 ```bash
 gibfind config
 ```
 
-Displays the saved bounty preferences.
+This displays your saved configuration.
 
-### Search for matching bounties
+### Command 2: Find matching bounties
 
 ```bash
 gibfind search
 ```
 
-Gibfind fetches available bounties, applies the configured matching rules, and prints the matching results.
+Gibfind fetches available bounties and checks them against your preferences.
 
 Example output:
 
@@ -174,32 +202,31 @@ Example output:
 
 Found 10 available bounties.
 Matching bounties: 2
-
---------------------------------
-Title: Example Development Bounty
-Payment: 25 USDC
-Tags: Development
-Deadline: No deadline
-ID: example-bounty-id
 ```
 
-The bounty titles, amounts, and number of matches depend on the live data and your preferences.
+The actual number of bounties depends on the live data and your preferences.
 
-### Monitor for new matching bounties
+### Command 3: Watch for new matches
 
 ```bash
 gibfind watch
 ```
 
-Watch mode checks for matching bounties every 60 seconds. When a matching bounty has not been processed before, Gibfind sends an email notification and records its ID in `seen.json`.
+Gibfind checks for matching bounties every 60 seconds.
 
-Stop watch mode with `Ctrl+C`.
+When it finds a matching bounty that has not been processed before, it attempts to send an email notification and records the bounty ID to prevent duplicate notifications.
 
-## Testing
+To stop the watcher, press:
 
-### Test matching and email notification
+```text
+Ctrl + C
+```
 
-The repository includes a sample bounty in `test-bounty.json` and a test runner in `watch-test.js`.
+## 9. Test the project
+
+You do not need to wait for a new real bounty to test the sample notification workflow.
+
+The project includes a sample bounty in `test-bounty.json` and a test runner called `watch-test.js`.
 
 Run:
 
@@ -207,29 +234,19 @@ Run:
 node watch-test.js
 ```
 
-This test is intended to demonstrate matching and notification behavior using sample data, without waiting for a new live bounty to appear.
+The test uses sample bounty data to demonstrate matching and notification behavior.
 
-A successful run should report a detected match and attempt to send the email notification. Make sure your `.env` email settings are configured before testing email delivery.
+If email settings are configured correctly, the test should also send an email.
 
-### Test against live Gibwork data
-
-Run:
+You can then test against real Gibwork data by running:
 
 ```bash
 gibfind search
 ```
 
-Confirm that Gibfind fetches available bounties and displays results based on your preferences.
+**Note:** The sample test does not create a real bounty on Gibwork. It only tests the local workflow.
 
-To test continuous monitoring, run:
-
-```bash
-gibfind watch
-```
-
-You can stop the watcher with `Ctrl+C`. A new live matching bounty is not guaranteed to appear during a short test.
-
-## Project Structure
+## 10. Project files explained
 
 ```text
 gibfind/
@@ -245,32 +262,71 @@ gibfind/
 ├── package.json
 ├── package-lock.json
 ├── README.md
-├── .env                  # Local only; do not commit
-└── gibwork-keypair.json  # Local only; do not commit
+├── .env
+└── gibwork-keypair.json
 ```
 
-## Gibwork Integration
+Here is what the main files do:
 
-Gibfind uses `@gibwork/sdk` as a core part of its implementation to fetch available bounties. The matching engine then evaluates the fetched data against user-defined preferences.
+- `bin/gibfind.js` — handles the CLI commands.
+- `search.js` — fetches and filters bounties.
+- `watch.js` — checks for matching bounties repeatedly.
+- `notify.js` — handles match notifications.
+- `email.js` — sends email notifications.
+- `preferences.json` — stores your filtering preferences.
+- `test-bounty.json` — contains sample bounty data.
+- `watch-test.js` — tests the sample notification workflow.
+- `.env` — stores local email settings.
+- `gibwork-keypair.json` — stores local Gibwork credentials.
 
-The CLI provides the user interface, while the matcher, duplicate tracking, and email notification workflow provide the automation.
+The `.env` and `gibwork-keypair.json` files are private local files and must never be uploaded to GitHub.
 
-## Security
+## 11. Troubleshooting
 
-Never commit credentials or private configuration files. Ensure `.env`, `gibwork-keypair.json`, `private-key.txt`, and `seen.json` are excluded by `.gitignore`.
+**Problem: `gibfind` is not recognized**
 
-Do not include actual credentials in screenshots, demo videos, logs, or documentation.
+Run `npm link` from the project folder. If necessary, reopen your terminal.
 
-## Current Status
+**Problem: Gibwork credential error**
 
-Gibfind has been tested with live Gibwork bounty data, configurable matching preferences, CLI commands, and email notification delivery. The sample-bounty test supports demonstrating the notification workflow without waiting for a new live match.
+Check that your keypair file exists, is valid, and is configured correctly for the SDK.
 
-## Future Improvements
+**Problem: No bounties match**
 
-- Additional filtering options.
-- More notification channels.
-- Improved matching and ranking.
-- Optional MCP integration for AI assistant workflows.
+Check your `preferences.json` settings. Try relaxing the filters or lowering `minimumMatches`.
+
+**Problem: Email notification fails**
+
+Check your Gmail settings, App Password, and `.env` file. Make sure the required environment variables are present.
+
+## 12. Gibwork integration
+
+Gibfind uses the `@gibwork/sdk` package to fetch available bounties. Its own matching logic filters those results based on user preferences.
+
+The CLI provides a simple way to search, configure preferences, and monitor opportunities without using a web dashboard.
+
+## 13. Security
+
+Never commit private credentials or passwords.
+
+Make sure `.gitignore` excludes at least:
+
+```gitignore
+node_modules/
+.env
+gibwork-keypair.json
+private-key.txt
+seen.json
+```
+
+Before pushing changes to GitHub, check that no secrets are included.
+
+## 14. Future improvements
+
+- More filtering options.
+- Additional notification methods.
+- Better bounty ranking.
+- Optional MCP integration for AI assistants.
 
 ## License
 
