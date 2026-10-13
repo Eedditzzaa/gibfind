@@ -1,6 +1,8 @@
 const fs = require("fs");
 const { createGibworkClient } = require("@gibwork/sdk/node");
 
+console.log("SEARCH.JS STARTED");
+
 const preferences = JSON.parse(
   fs.readFileSync("preferences.json", "utf8")
 );
@@ -11,7 +13,7 @@ const privateKey = JSON.parse(
 
 const gibwork = createGibworkClient({
   privateKey,
-  production: false,
+  production: true,
 });
 
 function matchesBounty(bounty) {
@@ -21,60 +23,72 @@ function matchesBounty(bounty) {
     ...(bounty.tags || [])
   ].join(" ").toLowerCase();
 
-  // Category matching
-  const categoryMatch =
-    preferences.categories.length === 0 ||
-    preferences.categories.some(category =>
+  let matchCount = 0;
+
+  // Category
+  if (preferences.categories.length > 0) {
+    const categoryMatch = preferences.categories.some(category =>
       (bounty.tags || []).some(tag =>
         tag.toLowerCase().includes(category.toLowerCase())
       )
     );
 
-  // Payment matching
-  const payment = Number(
-    bounty.minSubmissionAmount || 0
-  );
+    if (categoryMatch) {
+      matchCount++;
+    }
+  }
 
-  const paymentMatch =
-    payment >= preferences.minPayment;
+  // Minimum payment
+  if (preferences.minPayment !== null) {
+    const payment = Number(bounty.minSubmissionAmount || 0);
 
-  // Skill matching
-  // Skills are searched inside title/content/tags.
-  const skillMatch =
-    preferences.skills.length === 0 ||
-    preferences.skills.some(skill =>
+    if (payment >= preferences.minPayment) {
+      matchCount++;
+    }
+  }
+
+  // Skills
+  if (preferences.skills.length > 0) {
+    const skillMatch = preferences.skills.some(skill =>
       text.includes(skill.toLowerCase())
     );
 
-  // Keyword matching
-  const keywordMatch =
-    preferences.keywords.length === 0 ||
-    preferences.keywords.some(keyword =>
+    if (skillMatch) {
+      matchCount++;
+    }
+  }
+
+  // Keywords
+  if (preferences.keywords.length > 0) {
+    const keywordMatch = preferences.keywords.some(keyword =>
       text.includes(keyword.toLowerCase())
     );
 
-  // Deadline matching
-  let deadlineMatch = true;
+    if (keywordMatch) {
+      matchCount++;
+    }
+  }
 
-  if (bounty.deadline && preferences.maxDeadlineDays !== null) {
+  // Deadline
+  if (
+    bounty.deadline &&
+    preferences.maxDeadlineDays !== null
+  ) {
     const deadline = new Date(bounty.deadline);
     const now = new Date();
 
     const daysUntilDeadline =
       (deadline - now) / (1000 * 60 * 60 * 24);
 
-    deadlineMatch =
+    if (
       daysUntilDeadline >= 0 &&
-      daysUntilDeadline <= preferences.maxDeadlineDays;
+      daysUntilDeadline <= preferences.maxDeadlineDays
+    ) {
+      matchCount++;
+    }
   }
 
-  return (
-    categoryMatch &&
-    paymentMatch &&
-    skillMatch &&
-    keywordMatch &&
-    deadlineMatch
-  );
+  return matchCount >= preferences.minimumMatches;
 }
 
 async function main() {

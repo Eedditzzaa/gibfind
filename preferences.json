@@ -3,5 +3,7 @@
   "minPayment": 5,
   "skills": ["Python", "AI"],
   "maxDeadlineDays": 7,
-  "keywords": ["automation"]
+  "keywords": ["automation"],
+  "minimumMatches": 1
 }
+
